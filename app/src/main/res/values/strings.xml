@@ -1,8 +1,16 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">Bejelentkezés</string>
     <string name="action_settings">Settings</string>
     <string name="user_name">Felhasználónév:</string>
     <string name="password">Jelszó:</string>
     <string name="login">Belépés</string>
     <string name="register">Regisztrálás</string>
+    <string name="new_name">Új felhasználónév:</string>
+    <string name="new_password">Új jelszó:</string>
+    <string name="age">Kor:</string>
+    <string name="save">Mentés</string>
+    <string name="register_label">Regisztrálás</string>
+    <string name="required_str">Kötelező megadni!</string>
+    <string name="show_all_user">Összes felhasználó mutatása</string>
+    <string name="all_user_label">Összes Felhasználó</string>
 </resources>
