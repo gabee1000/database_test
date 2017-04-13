@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">My Application</string>
     <string name="action_settings">Settings</string>
+    <string name="user_name">Felhasználónév:</string>
+    <string name="password">Jelszó:</string>
+    <string name="login">Belépés</string>
+    <string name="register">Regisztrálás</string>
 </resources>
