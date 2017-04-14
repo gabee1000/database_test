@@ -82,4 +82,19 @@ public class UserDBHandler extends SQLiteOpenHelper {
         db.close();
         return userList;
     }
+
+
+    public boolean isUserInDatabase(User user) {
+        SQLiteDatabase db = getReadableDatabase();
+        String query = "SELECT " + NAME + ", " + PASSWORD + " FROM " + TABLE_NAME + " WHERE " + NAME + " = '" + user.getName() + "' AND " + PASSWORD + " = '" + user.getPassword() + "'";
+        Cursor cursor = db.rawQuery(query, null);
+
+        if (cursor.moveToFirst()) {
+            return true;
+        }
+
+        cursor.close();
+        db.close();
+        return false;
+    }
 }
