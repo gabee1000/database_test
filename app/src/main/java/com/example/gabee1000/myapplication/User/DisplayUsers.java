@@ -1,13 +1,20 @@
 package com.example.gabee1000.myapplication.User;
 
+import android.content.DialogInterface;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Message;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.gabee1000.myapplication.Database.UserDBHandler;
 import com.example.gabee1000.myapplication.R;
@@ -43,37 +50,36 @@ public class DisplayUsers extends AppCompatActivity {
     }
 
     private void actions() {
-        showAllListView.setAdapter(new BaseAdapter() {
+        final DisplayUsersAdapter adapter = new DisplayUsersAdapter(this, userList);
+        showAllListView.setAdapter(adapter);
+        showAllListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public int getCount() {
-                return userList.size();
-            }
-
-            @Override
-            public Object getItem(int position) {
-                return userList.get(position);
-            }
-
-            @Override
-            public long getItemId(int position) {
-                return position;
-            }
-
-            @Override
-            public View getView(int position, View view, ViewGroup parent) {
-                if (view == null) {
-                    LayoutInflater inflater = getLayoutInflater();
-                    view = inflater.inflate(R.layout.show_all_list_view_item, parent, false);
-                }
-
-                User currentUser = (User) getItem(position);
-
-                TextView name = (TextView) view.findViewById(R.id.lv_item_name);
-                TextView age = (TextView) view.findViewById(R.id.lv_item_age);
-                name.setText(currentUser.getName());
-                age.setText(String.valueOf(currentUser.getAge()));
-
-                return view;
+            public boolean onItemLongClick(AdapterView<?> parent, View v, final int position, long id) {
+                final User user = userList.get(position);
+                String name = userList.get(position).getName();
+                AlertDialog dialog = new AlertDialog.Builder(DisplayUsers.this).create();
+                dialog.setTitle("Rekord törlése");
+                dialog.setMessage("Biztos, hogy törli a(z) [" + name + "] nevű felhasználót az adatbázisból?");
+                Drawable drawable = v.getContext().getDrawable(android.R.drawable.ic_delete);
+                assert drawable != null;
+                dialog.setIcon(drawable);
+                dialog.setButton(AlertDialog.BUTTON_POSITIVE, "IGEN", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dbHandler.removeUser(user);
+                        userList.remove(position);
+                        adapter.updateList(userList);
+                        Toast.makeText(DisplayUsers.this, "Deleted", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                dialog.setButton(AlertDialog.BUTTON_NEGATIVE, "NEM", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                dialog.show();
+                return true;
             }
         });
     }

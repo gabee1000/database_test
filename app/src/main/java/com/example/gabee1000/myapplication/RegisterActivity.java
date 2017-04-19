@@ -56,8 +56,9 @@ public class RegisterActivity extends AppCompatActivity {
                     return;
                 }
                 UserDBHandler dbHandler = new UserDBHandler(v.getContext());
-                User user = new User(dbHandler.getNewId(), nameET.getText().toString(), passwdET.getText().toString(), Integer.parseInt(ageET.getText().toString()));
+                User user = new User(dbHandler.getMaxId(), nameET.getText().toString(), passwdET.getText().toString(), Integer.parseInt(ageET.getText().toString()));
                 dbHandler.addUser(user);
+                finish();
             }
         });
     }

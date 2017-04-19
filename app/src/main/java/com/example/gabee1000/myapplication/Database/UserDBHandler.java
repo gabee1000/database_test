@@ -31,7 +31,7 @@ public class UserDBHandler extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String createTable = "CREATE TABLE " + TABLE_NAME + " ( " + ID_KEY + " INTEGER PRIMARY KEY, " + NAME + " TEXT, " + PASSWORD + " TEXT, " + AGE + " INTEGER );";
+        String createTable = "CREATE TABLE " + TABLE_NAME + " ( " + ID_KEY + " INTEGER PRIMARY KEY AUTOINCREMENT, " + NAME + " TEXT, " + PASSWORD + " TEXT, " + AGE + " INTEGER );";
         db.execSQL(createTable);
     }
 
@@ -45,7 +45,7 @@ public class UserDBHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(ID_KEY, user.getId());
+//        values.put(ID_KEY, user.getId());
         values.put(NAME, user.getName());
         values.put(PASSWORD, user.getPassword());
         values.put(AGE, user.getAge());
@@ -54,11 +54,12 @@ public class UserDBHandler extends SQLiteOpenHelper {
         db.close();
     }
 
-    public int getNewId() {
+    public int getMaxId() {
         SQLiteDatabase db = this.getReadableDatabase();
-        String countQuery = "SELECT * FROM " + TABLE_NAME;
+        String countQuery = "SELECT Max(" + ID_KEY + ") FROM " + TABLE_NAME;
         Cursor cursor = db.rawQuery(countQuery, null);
-        int count = cursor.getCount();
+        cursor.moveToFirst();
+        int count = (cursor.getInt(0) + 1);
         db.close();
         cursor.close();
         return count;
@@ -96,5 +97,12 @@ public class UserDBHandler extends SQLiteOpenHelper {
         cursor.close();
         db.close();
         return false;
+    }
+
+    public void removeUser(User user) {
+        SQLiteDatabase db = getWritableDatabase();
+        String where = NAME + " = '" + user.getName() + "' AND " + PASSWORD + " = '" + user.getPassword() + "'";
+        db.delete(TABLE_NAME, where, null);
+        db.close();
     }
 }
