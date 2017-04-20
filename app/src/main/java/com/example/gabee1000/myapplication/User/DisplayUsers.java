@@ -16,7 +16,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.gabee1000.myapplication.Database.DatabaseLoaderTask;
 import com.example.gabee1000.myapplication.Database.UserDBHandler;
+import com.example.gabee1000.myapplication.Listeners.OnTaskCompleted;
 import com.example.gabee1000.myapplication.R;
 
 import java.util.ArrayList;
@@ -26,7 +28,7 @@ import java.util.List;
  * Created by gabee1000 on 2017. 04. 13..
  */
 
-public class DisplayUsers extends AppCompatActivity {
+public class DisplayUsers extends AppCompatActivity implements OnTaskCompleted{
     private List<User> userList = new ArrayList<>();
     private ListView showAllListView;
     private UserDBHandler dbHandler;
@@ -51,6 +53,7 @@ public class DisplayUsers extends AppCompatActivity {
 
     private void actions() {
         final DisplayUsersAdapter adapter = new DisplayUsersAdapter(this, userList);
+        new DatabaseLoaderTask(this, this).execute();
         showAllListView.setAdapter(adapter);
         showAllListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
@@ -82,5 +85,10 @@ public class DisplayUsers extends AppCompatActivity {
                 return true;
             }
         });
+    }
+
+    @Override
+    public void onTaskCompleted(String msg) {
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 }
