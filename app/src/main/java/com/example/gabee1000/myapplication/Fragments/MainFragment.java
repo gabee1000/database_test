@@ -1,54 +1,56 @@
-package com.example.gabee1000.myapplication;
+package com.example.gabee1000.myapplication.Fragments;
 
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Message;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AlertDialog.Builder;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
 import com.example.gabee1000.myapplication.Database.UserDBHandler;
 import com.example.gabee1000.myapplication.Listeners.RegisterClickListener;
+import com.example.gabee1000.myapplication.R;
 import com.example.gabee1000.myapplication.User.DisplayUsers;
 import com.example.gabee1000.myapplication.User.User;
 
-public class MainActivity extends AppCompatActivity {
-    private Toolbar toolbar;
+/**
+ * Created by gabee1000 on 2017. 04. 24..
+ */
+
+public class MainFragment extends Fragment {
     private UserDBHandler dbHandler;
     private EditText nameET;
     private EditText passwdET;
     private Button btnLogin;
     private Button btnRegister;
     private Button btnShowAll;
+    private View view;
 
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        view = inflater.inflate(R.layout.content_main, container, false);
         init();
         load();
         actions();
+        return view;
     }
 
     private void init() {
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        dbHandler = new UserDBHandler(this);
-        nameET = (EditText) findViewById(R.id.name);
-        passwdET = (EditText) findViewById(R.id.password);
-        btnLogin = (Button) findViewById(R.id.login);
-        btnRegister = (Button) findViewById(R.id.register);
-        btnRegister.setOnClickListener(new RegisterClickListener(this));
-        btnShowAll = (Button) findViewById(R.id.show_all_user);
+        dbHandler = new UserDBHandler(this.getContext());
+        nameET = (EditText) view.findViewById(R.id.name);
+        passwdET = (EditText) view.findViewById(R.id.password);
+        btnLogin = (Button) view.findViewById(R.id.login);
+        btnRegister = (Button) view.findViewById(R.id.register);
+        btnRegister.setOnClickListener(new RegisterClickListener(getActivity()));
+        btnShowAll = (Button) view.findViewById(R.id.show_all_user);
     }
 
     private void load() {
@@ -67,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 AlertDialog dialog = new AlertDialog.Builder(v.getContext(), R.style.AlertDialogTheme).create();
-                if (dbHandler.isUserInDatabase(new User(0,nameET.getText().toString(), passwdET.getText().toString(), 0))) {
+                if (dbHandler.isUserInDatabase(new User(0, nameET.getText().toString(), passwdET.getText().toString(), 0))) {
                     dialog.setTitle("Sikeres bejelentkezés");
                     dialog.setMessage("Ön bejelentkezett [" + nameET.getText().toString() + "] névvel!");
                     Drawable drawable = v.getContext().getDrawable(android.R.drawable.ic_dialog_info);
@@ -77,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
                     dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            finish();
+                            getActivity().finish();
                         }
                     });
                     dialog.show();
@@ -99,27 +101,5 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 }
