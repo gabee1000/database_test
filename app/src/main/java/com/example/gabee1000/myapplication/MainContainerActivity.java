@@ -12,6 +12,7 @@ import android.view.DragEvent;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.gabee1000.myapplication.Animations.ZoomOutPageTransformer;
 import com.example.gabee1000.myapplication.Fragments.MainScreenSlidePagerAdapter;
 import com.example.gabee1000.myapplication.Listeners.OnClickButtonListener;
 import com.example.gabee1000.myapplication.Listeners.ScreenSliderPagerListener;
@@ -42,6 +43,7 @@ public class MainContainerActivity extends AppCompatActivity implements OnClickB
         mMainScreenSlidePager.setPageMargin(60);
         mMainPagerAdapter = new MainScreenSlidePagerAdapter(getSupportFragmentManager());
         mMainScreenSlidePager.setAdapter(mMainPagerAdapter);
+        mMainScreenSlidePager.setPageTransformer(true, new ZoomOutPageTransformer());
     }
 
     private void action() {
